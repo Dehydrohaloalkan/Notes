@@ -1,20 +1,33 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+import { NotesScreen } from './screens/NotesScreen';
+import { FullNoteScreen } from './screens/FullNoteScreen';
+
+const Stack = createNativeStackNavigator();
+
+const App = () => (
+    <NavigationContainer>
+        <Stack.Navigator
+            initialRouteName="Notes">
+            <Stack.Screen
+                name="Notes"
+                component={NotesScreen}
+                options={{
+                    title: "Notes",
+                }}
+            />
+            <Stack.Screen
+                name="FullNote"
+                component={FullNoteScreen}
+                options={{
+                    title: 'Untitled',
+                }}
+            />
+        </Stack.Navigator>
+    </NavigationContainer>
+);
+
+export default App;
