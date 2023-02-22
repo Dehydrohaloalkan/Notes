@@ -26,7 +26,7 @@ export function SettingsModal({ settingsVisible, setSettingsVisible, savingSyste
                 <View style={styles.modalView}>
                     <Text style={styles.modalText}>Notes saving system</Text>
                     <View>
-                        {['SQLite', 'File sistem'].map((l, i) => (
+                        {['File sistem', 'SQLite'].map((l, i) => (
                             <CheckBox
                                 key={i}
                                 title={l}

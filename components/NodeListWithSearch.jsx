@@ -3,22 +3,20 @@ import { View, TextInput, StyleSheet } from "react-native"
 
 import { NotesList } from "./NotesList"
 
-export function NodeListWithSeach({ data, onRemove }) {
+export function NodeListWithSeach({ data, onRemove, savingSystem }) {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState(data);
 
-    const search = () => {
-        const filteredResults = data.filter((note) => note.title.toLowerCase().includes(searchTerm.toLowerCase()));
-        setSearchResults(filteredResults);
-    }
-
     useEffect(() => {
         search();
-    }, [data]);
+    }, [data, searchTerm]);
+
+    const search = () => {
+        setSearchResults(data.filter((note) => note.title.toLowerCase().includes(searchTerm.toLowerCase())));
+    }
 
     const handleChange = (text) => {
         setSearchTerm(text);
-        search();
     };
 
     return (
@@ -32,7 +30,7 @@ export function NodeListWithSeach({ data, onRemove }) {
                     onChangeText={handleChange}
                 />
             </View>
-            <NotesList data={searchResults} onRemove={onRemove}></NotesList>
+            <NotesList data={searchResults} onRemove={onRemove} savingSystem={savingSystem}></NotesList>
         </View>
     )
 }

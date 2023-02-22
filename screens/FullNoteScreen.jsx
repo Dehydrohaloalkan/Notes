@@ -3,6 +3,7 @@ import { TextInput, ScrollView, StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import * as fs from '../services/fs.service';
+import * as sqlite from '../services/SQLite.service';
 
 import { SaveButton } from '../components/SaveButton';
 import { cutString } from '../services/cutString';
@@ -14,9 +15,10 @@ export function FullNoteScreen({ route }) {
         title: '',
         description: '',
     });
+    const [ss, setss] = useState(fs);
 
     useEffect(() => {
-        if (route.params != undefined) {
+        if (route.params.note != undefined) {
             navigation.setOptions({ title: cutString(route.params.note.title, 15) })
             setNote(route.params.note)
         } else {
@@ -26,6 +28,12 @@ export function FullNoteScreen({ route }) {
                 title: '',
                 description: '',
             })
+        }
+        if (route.params.savingSystem == 1) {
+            setss(fs);
+        } else {
+            sqlite.createTable();
+            setss(sqlite);
         }
     }, []);
 
@@ -57,7 +65,7 @@ export function FullNoteScreen({ route }) {
     }
 
     const saveNote = async () => {
-        const id = await fs.addOrUpdateNote(note);
+        const id = await ss.addOrUpdateNote(note);
         setNote({
             id: id,
             title: note.title,

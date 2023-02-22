@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import * as fs from '../services/fs.service';
+import * as sqlite from '../services/SQLite.service';
 
 import { NodeListWithSeach } from '../components/NodeListWithSearch';
 import { SettingsModal } from '../components/SettingsModal';
@@ -13,6 +14,7 @@ export function NotesScreen() {
     const navigation = useNavigation();
     const [settingsVisible, setSettingsVisible] = useState(false);
     const [savingSystem, setSavingSystem] = useState(1);
+    const [ss, setss] = useState(fs);
 
     const [notes, setNotes] = useState([]);
 
@@ -20,7 +22,7 @@ export function NotesScreen() {
         navigation.setOptions({
             headerRight: () => (
                 <SettingsButton onPress={() => setSettingsVisible(true)} />
-            ), 
+            ),
         });
     }, []);
 
@@ -29,21 +31,34 @@ export function NotesScreen() {
         return () => {
             navigation.removeListener('focus', getNotes);
         }
-    }, [navigation]);
+    }, [navigation, ss]);
+
+    useEffect(() => {
+        if (savingSystem == 1) {
+            setss(fs);
+        } else {
+            sqlite.createTable();
+            setss(sqlite);
+        }
+    }, [savingSystem]);
+
+    useEffect(() => {
+        getNotes();
+    }, [ss]);
 
     const getNotes = async () => {
-        setNotes(await fs.getAllNotes());
+        setNotes(await ss.getAllNotes());
     }
 
     return (
         <View>
-            <NodeListWithSeach data={notes} onRemove={() => getNotes()}></NodeListWithSeach>
-            <AddNewButton onPress={() => navigation.navigate('FullNote')} />
-            <SettingsModal 
-                settingsVisible={settingsVisible} 
-                setSettingsVisible={setSettingsVisible} 
-                savingSystem = {savingSystem}
-                setSavingSystem = {setSavingSystem}/>
+            <NodeListWithSeach data={notes} onRemove={() => getNotes()} savingSystem={savingSystem}></NodeListWithSeach>
+            <AddNewButton onPress={() => navigation.navigate('FullNote', {savingSystem: savingSystem})} />
+            <SettingsModal
+                settingsVisible={settingsVisible}
+                setSettingsVisible={setSettingsVisible}
+                savingSystem={savingSystem}
+                setSavingSystem={setSavingSystem} />
         </View>
     );
 }

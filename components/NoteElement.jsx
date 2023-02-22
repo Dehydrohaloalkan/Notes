@@ -1,14 +1,11 @@
 import { Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 
-import { cutString } from "../services/cutString";
-import * as fs from '../services/fs.service';
-
-export function Note({ data, onRemove }) {
+export function Note({ data, onRemove, savingSystem }) {
     const navigation = useNavigation();
 
     const deleteCurrentNote = async () => {
-        await fs.removeNote(data);
+        await ss.removeNote(data);
         onRemove?.();
     }
 
@@ -26,7 +23,7 @@ export function Note({ data, onRemove }) {
         <TouchableOpacity
             style={styles.container}
             activeOpacity={0.7}
-            onPress={() => navigation.navigate('FullNote', { note: data })}
+            onPress={() => navigation.navigate('FullNote', { note: data, savingSystem: savingSystem })}
             onLongPress={promptToDeleteNote}
         >
             <Text style={styles.title}>{data.title}</Text>
