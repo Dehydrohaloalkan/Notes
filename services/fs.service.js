@@ -6,12 +6,22 @@ function generateId() {
     return Date.now();
 }
 
+export async function createFile() {
+    const fileInfo = await FileSystem.getInfoAsync(fileUri);
+    if (!fileInfo.exists) {
+        await FileSystem.writeAsStringAsync(fileUri, JSON.stringify([]));
+        console.log('File created.');
+    } else {
+        console.log('File already exists.');
+    }
+}
+
 export async function getAllNotes() {
     const jsonString = await FileSystem.readAsStringAsync(fileUri);
     return JSON.parse(jsonString);
 }
 
-async function addNote(note){
+async function addNote(note) {
     console.log(FileSystem.documentDirectory);
     const data = await getAllNotes();
     note.id = generateId();
@@ -20,7 +30,7 @@ async function addNote(note){
     return note.id;
 }
 
-async function updateNote(note){
+async function updateNote(note) {
     const data = await getAllNotes();
     const index = data.findIndex(item => item.id === note.id);
     if (index !== -1) {
@@ -30,8 +40,8 @@ async function updateNote(note){
     return note.id;
 }
 
-export async function addOrUpdateNote(note){
-    if (note.id == -1){
+export async function addOrUpdateNote(note) {
+    if (note.id == -1) {
         return await addNote(note).catch((e) => console.log(e));
     } else {
         return await updateNote(note).catch((e) => console.log(e));

@@ -3,7 +3,7 @@ import { View, TextInput, StyleSheet } from "react-native"
 
 import { NotesList } from "./NotesList"
 
-export function NodeListWithSeach({ data, onRemove, savingSystem }) {
+export function NodeListWithSeach({ data, onRemove, savingSystem, ss }) {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState(data);
 
@@ -30,7 +30,7 @@ export function NodeListWithSeach({ data, onRemove, savingSystem }) {
                     onChangeText={handleChange}
                 />
             </View>
-            <NotesList data={searchResults} onRemove={onRemove} savingSystem={savingSystem}></NotesList>
+            <NotesList data={searchResults} onRemove={onRemove} savingSystem={savingSystem} ss={ss}></NotesList>
         </View>
     )
 }

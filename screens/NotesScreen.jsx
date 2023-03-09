@@ -15,7 +15,6 @@ export function NotesScreen() {
     const [settingsVisible, setSettingsVisible] = useState(false);
     const [savingSystem, setSavingSystem] = useState(1);
     const [ss, setss] = useState(fs);
-
     const [notes, setNotes] = useState([]);
 
     useEffect(() => {
@@ -24,6 +23,7 @@ export function NotesScreen() {
                 <SettingsButton onPress={() => setSettingsVisible(true)} />
             ),
         });
+        changeSs();
     }, []);
 
     useEffect(() => {
@@ -34,17 +34,22 @@ export function NotesScreen() {
     }, [navigation, ss]);
 
     useEffect(() => {
-        if (savingSystem == 1) {
-            setss(fs);
-        } else {
-            sqlite.createTable();
-            setss(sqlite);
-        }
+        changeSs();
     }, [savingSystem]);
 
     useEffect(() => {
         getNotes();
     }, [ss]);
+
+    const changeSs = () => {
+        if (savingSystem == 1) {
+            fs.createFile();
+            setss(fs);
+        } else {
+            sqlite.createTable();
+            setss(sqlite);
+        }
+    }
 
     const getNotes = async () => {
         setNotes(await ss.getAllNotes());
@@ -52,8 +57,8 @@ export function NotesScreen() {
 
     return (
         <View>
-            <NodeListWithSeach data={notes} onRemove={() => getNotes()} savingSystem={savingSystem}></NodeListWithSeach>
-            <AddNewButton onPress={() => navigation.navigate('FullNote', {savingSystem: savingSystem})} />
+            <NodeListWithSeach data={notes} onRemove={() => getNotes()} savingSystem={savingSystem} ss={ss}></NodeListWithSeach>
+            <AddNewButton onPress={() => navigation.navigate('FullNote', { savingSystem: savingSystem })} />
             <SettingsModal
                 settingsVisible={settingsVisible}
                 setSettingsVisible={setSettingsVisible}

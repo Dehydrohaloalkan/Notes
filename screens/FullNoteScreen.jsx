@@ -30,6 +30,7 @@ export function FullNoteScreen({ route }) {
             })
         }
         if (route.params.savingSystem == 1) {
+            fs.createFile();
             setss(fs);
         } else {
             sqlite.createTable();

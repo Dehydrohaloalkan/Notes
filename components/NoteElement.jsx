@@ -1,7 +1,7 @@
 import { Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 
-export function Note({ data, onRemove, savingSystem }) {
+export function Note({ data, onRemove, savingSystem, ss }) {
     const navigation = useNavigation();
 
     const deleteCurrentNote = async () => {
